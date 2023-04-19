@@ -1,0 +1,35 @@
+name: cmip_processing
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+# python
+- ipykernel
+- ipython
+- pip
+- python=3.11
+# data analysis
+- cartopy
+- cf_xarray
+- cftime
+- dask
+- flox
+- h5netcdf # used?
+- matplotlib
+- netcdf4
+- numpy
+- pandas<2
+- regionmask # used?
+- seaborn
+- scipy
+- xarray
+  # - xclim
+# code formatting
+- black
+- flake8
+- isort
+- pip:
+  - https://github.com/mathause/filefinder/archive/refs/tags/v0.1.0.tar.gz
+  - https://github.com/mathause/mplotutils/archive/refs/tags/v0.3.1.tar.gz
