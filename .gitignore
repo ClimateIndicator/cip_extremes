@@ -2,6 +2,10 @@
 # exclude netCDF files
 *.nc
 
+# exclude Berkeley global mean
+data/BerkeleyEarth/raw/Land_and_Ocean_summary.txt
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
