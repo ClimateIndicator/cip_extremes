@@ -7,6 +7,10 @@ Authors: Mathias Hauser<sup>1</sup>, Dominik Schumacher<sup>1</sup>, Sonia I. Se
 Analysis of land mean extreme indicators - currently annual maximum temperatures (TXx).
 
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
 ## Data
 
 ### ERA5
