@@ -59,9 +59,9 @@ def convert_hadex3_landmask():
     landmask.attrs["history"] = "Created by convert_hadex3_landmask.py"
     landmask.attrs["creator_name"] = "Mathias Hauser & Robert Dunn"
     landmask.attrs["creator_url"] = "www.iac.ethz.ch & www.metoffice.gov.uk"
-    landmask.attrs[
-        "creator_email"
-    ] = "mathias.hauser@env.ethz.ch & robert.dunn@metoffice.gov.uk"
+    landmask.attrs["creator_email"] = (
+        "mathias.hauser@env.ethz.ch & robert.dunn@metoffice.gov.uk"
+    )
 
     # remove unneccesary attributes
     del landmask.attrs["processing_level"]
