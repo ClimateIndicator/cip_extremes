@@ -1,4 +1,5 @@
 import glob
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -10,14 +11,15 @@ from . import utils
 xr.set_options(use_flox=False)
 
 DATA_ROOT = "../data/BerkeleyEarth"
+VERSION = "v2024"
 
 
-def read_full(variable):
+def read_full(variable, version=VERSION):
     """read full Berkeley Earth data, clean time and coord names"""
 
     decade = "*"
 
-    path = f"{DATA_ROOT}/raw/Complete_{variable}_Daily_LatLong1_{decade}.nc"
+    path = f"{DATA_ROOT}/{version}/raw/{variable}/Complete_{variable}_Daily_LatLong1_{decade}.nc"
     files = sorted(glob.glob(path))
 
     ds_orig = utils.open_mfdataset(files, combine="nested", concat_dim="time")
@@ -36,10 +38,10 @@ def read_full(variable):
     return ds_orig
 
 
-def read(variable, time_period, remove_antarctica=True):
+def read(variable, time_period, remove_antarctica=True, version=VERSION):
     """read Berkeley Earth data, removing unneded parts"""
 
-    ds = read_full(variable)
+    ds = read_full(variable, version=version)
 
     if remove_antarctica:
         ds = ds.sel(lat=slice(-60, None))
@@ -49,30 +51,32 @@ def read(variable, time_period, remove_antarctica=True):
     ds = ds.sel(time=time_period)
 
     # make sure there is no incomplete year of data
-    assert ds.time.dt.dayofyear[-1] >= 365
+    if ds.time.dt.dayofyear[-1] < 365:
+        last_day = ds.time[-1].dt.strftime(r"%Y-%m-%d").item()
+        warnings.warn(f"Last day not at end of year: {last_day}")
 
     return ds
 
 
-def get_filename_post(variable, post):
+def get_filename_post(variable, post, version=VERSION):
     """filename for postprocessed Berkeley Earth data"""
 
-    return f"{DATA_ROOT}/post/{variable}/{variable}_{post}.nc"
+    return f"{DATA_ROOT}/{version}/post/{variable}/{variable}_{post}.nc"
 
 
-def read_post(variable, post):
+def read_post(variable, post, version=VERSION):
     """read postprocessed Berkeley Earth data"""
 
-    filename = get_filename_post(variable, post)
+    filename = get_filename_post(variable, post, version=version)
 
     return xr.open_dataset(filename)
 
 
-def read_globmean(ref_period):
+def read_globmean(ref_period, version=VERSION):
     """read Berkeley Earth global mean temperature"""
 
     df = pd.read_csv(
-        "../data/BerkeleyEarth/raw/Land_and_Ocean_summary.txt",
+        f"{DATA_ROOT}/{version}/raw/Land_and_Ocean_summary.txt",
         header=None,
         #     sep=" ",
         delim_whitespace=True,
