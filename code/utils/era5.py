@@ -1,12 +1,14 @@
+from pathlib import Path
+
 import filefinder
 import xarray as xr
 
-DATA_ROOT = "/net/exo/landclim/data/dataset/ERA5_deterministic/recent/"
+DATA_ROOT = Path("/net/exo/landclim/data/dataset/ERA5_deterministic/recent/")
 
 SEL_LAT = slice(84, -58)
 
 files_orig = filefinder.FileFinder(
-    path_pattern=DATA_ROOT + "0.25deg_lat-lon_{time_res}/original/",
+    path_pattern=DATA_ROOT / "0.25deg_lat-lon_{time_res}/original/",
     file_pattern="era5_deterministic_recent.{variable}.025deg.{time_res}.{year}.nc",
 )
 
@@ -18,10 +20,8 @@ files_post = ff = filefinder.FileFinder(
 
 def load_landmask(remove_antarctica=True):
 
-    fN = (
-        DATA_ROOT
-        + "0.25deg_lat-lon_time-invariant/original/era5_deterministic_recent.lsm.025deg.time-invariant.nc"
-    )
+    path = DATA_ROOT/ "0.25deg_lat-lon_time-invariant/original"
+    fN = path / "era5_deterministic_recent.lsm.025deg.time-invariant.nc"
 
     land_mask = xr.open_dataset(fN).lsm
     land_mask = land_mask.rename(longitude="lon", latitude="lat")
@@ -45,6 +45,6 @@ def load_post(variable):
 
         out.append(ds)
 
-    ds = xr.concat(out, dim="year")
+    ds = xr.concat(out, dim="time")
 
     return ds
