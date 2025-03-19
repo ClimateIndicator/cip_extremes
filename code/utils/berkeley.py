@@ -11,31 +11,48 @@ from . import utils
 xr.set_options(use_flox=False)
 
 DATA_ROOT = "../data/BerkeleyEarth"
-VERSION = "v2024"
+VERSION = "v2025"
+
+def _get_filenames(variable, version):
+    
+    decade = "*"
+
+    path = f"{DATA_ROOT}/{version}/raw/{variable}/Complete_{variable}_Daily_LatLong1_{decade}.nc"
+    return sorted(glob.glob(path))
+
+def _fix_dataset(ds):
+
+    # convert integer dates to datetime
+    df = ds[["year", "month", "day"]].to_pandas()
+    time = pd.to_datetime(df).values
+
+    # remove unnecessary time variables
+    ds = ds.drop_vars(["year", "month", "day", "date_number"])
+
+    ds = ds.assign_coords(time=time)
+
+    ds = ds.rename(longitude="lon", latitude="lat")
+
+    return ds
+
+def read_last_decade(variable, version=VERSION):
+
+    files = _get_filenames(variable, version)
+
+    ds_orig = xr.open_dataset(files[-1])
+
+    return _fix_dataset(ds_orig)
+
 
 
 def read_full(variable, version=VERSION):
     """read full Berkeley Earth data, clean time and coord names"""
 
-    decade = "*"
-
-    path = f"{DATA_ROOT}/{version}/raw/{variable}/Complete_{variable}_Daily_LatLong1_{decade}.nc"
-    files = sorted(glob.glob(path))
+    files = _get_filenames(variable, version)
 
     ds_orig = utils.open_mfdataset(files, combine="nested", concat_dim="time")
 
-    # convert integer dates to datetime
-    df = ds_orig[["year", "month", "day"]].to_pandas()
-    time = pd.to_datetime(df).values
-
-    # remove unnecessary time variables
-    ds_orig = ds_orig.drop_vars(["year", "month", "day", "date_number"])
-
-    ds_orig = ds_orig.assign_coords(time=time)
-
-    ds_orig = ds_orig.rename(longitude="lon", latitude="lat")
-
-    return ds_orig
+    return _fix_dataset(ds_orig)
 
 
 def read(variable, time_period, remove_antarctica=True, version=VERSION):
@@ -78,8 +95,7 @@ def read_globmean(ref_period, version=VERSION):
     df = pd.read_csv(
         f"{DATA_ROOT}/{version}/raw/Land_and_Ocean_summary.txt",
         header=None,
-        #     sep=" ",
-        delim_whitespace=True,
+        sep=r'\s+',
         na_values="NaN",
         skipinitialspace=True,
         comment="%",
