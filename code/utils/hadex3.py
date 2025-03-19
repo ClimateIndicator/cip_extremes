@@ -15,7 +15,7 @@
 
 import warnings
 
-import filefinder as ff
+import filefisher as ff
 import xarray as xr
 
 # from utils import plot
@@ -42,7 +42,7 @@ class HadEx3_cls:
             file_pattern="{postprocess}_HadEX3_{varn}_ADW_{climatology}.{ending}",
         )
 
-        self._all_files_raw = None
+        self._filecontainer_all_files_raw = None
 
         self.map_abbrevs = dict(
             TXx="maximum Tmax",
@@ -86,12 +86,12 @@ class HadEx3_cls:
         return self._files_post
 
     @property
-    def all_files_raw(self):
+    def filecontainer_all_files_raw(self):
         """FileFinder list of all raw files"""
-        if self._all_files_raw is None:
-            self._all_files_raw = self.files_raw.find_files()
+        if self._filecontainer_all_files_raw is None:
+            self._filecontainer_all_files_raw = self.files_raw.find_files()
 
-        return self._all_files_raw
+        return self._filecontainer_all_files_raw
 
     def __repr__(self):
         return "<HadEx3 class>"
@@ -118,8 +118,9 @@ class HadEx3_cls:
         meta : dict of meta data
         """
 
-        fc = self.all_files_raw
-        fN, meta = fc.search(varn=varn, climatology=climatology, version=version)[0]
+        fc = self.filecontainer_all_files_raw
+        fc = fc.search_single(varn=varn, climatology=climatology, version=version)
+        fN, meta = fc[0]
 
         ds = xr.open_dataset(fN, decode_cf=False)
 
