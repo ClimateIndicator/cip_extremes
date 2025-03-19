@@ -3,6 +3,8 @@
 
 ## v2025.01 (unreleased)
 
+- Adapt code to filefisher v1.1.0, formerly filefinder ([#16](https://github.com/ClimateIndicator/cip_extremes/pull/16)).
+
 
 ## v2024.01 (12.03.2025)
 
