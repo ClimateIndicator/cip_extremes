@@ -11,6 +11,7 @@
   - re-process new data
 - Update ALL_txx_tnn_ts notebook ([#18](https://github.com/ClimateIndicator/cip_extremes/pull/18)).
 - Update data for 2024: time series and decadal means ([#19](https://github.com/ClimateIndicator/cip_extremes/pull/19)).
+- Add Berkeley Earth to data table ([#23](https://github.com/ClimateIndicator/cip_extremes/pull/23)).
 
 ## v2024.01 (12.03.2025)
 
