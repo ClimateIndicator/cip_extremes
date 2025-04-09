@@ -12,6 +12,7 @@
 - Update ALL_txx_tnn_ts notebook ([#18](https://github.com/ClimateIndicator/cip_extremes/pull/18)).
 - Update data for 2024: time series and decadal means ([#19](https://github.com/ClimateIndicator/cip_extremes/pull/19)).
 - Add Berkeley Earth to data table ([#23](https://github.com/ClimateIndicator/cip_extremes/pull/23)).
+- Only show 1850-1900 in table and remove 1961-1990 to simplify it ([#24](https://github.com/ClimateIndicator/cip_extremes/pull/24)).
 
 ## v2024.01 (12.03.2025)
 
